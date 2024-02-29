@@ -71,54 +71,82 @@ var body_parser_1 = __importDefault(require("body-parser"));
 var webhooks_1 = require("./webhooks");
 var build_1 = __importDefault(require("next/dist/build"));
 var path_1 = __importDefault(require("path"));
-var PORT = process.env.PORT || 3000;
+var url_1 = require("url");
 var app = (0, express_1.default)();
+var PORT = Number(process.env.PORT) || 3000;
 var createContext = function (_a) {
     var req = _a.req, res = _a.res;
-    return ({ req: req, res: res });
+    return ({
+        req: req,
+        res: res,
+    });
 };
 var start = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var payload, webhookMiddleware;
+    var webhookMiddleware, payload, cartRouter;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, get_payload_1.getPayloadClient)({
-                    initOptions: {
-                        express: app,
-                        onInit: function (cms) { return __awaiter(void 0, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                cms.logger.info("Admin URL: ".concat(cms.getAdminURL()));
-                                return [2 /*return*/];
-                            });
-                        }); },
-                    },
-                })];
-            case 1:
-                payload = _a.sent();
+            case 0:
                 webhookMiddleware = body_parser_1.default.json({
                     verify: function (req, _, buffer) {
                         req.rawBody = buffer;
                     },
                 });
-                app.use("api/webhook/stripe", webhookMiddleware, webhooks_1.stripeWebhookHandler);
+                app.post("/api/webhooks/stripe", webhookMiddleware, webhooks_1.stripeWebhookHandler);
+                return [4 /*yield*/, (0, get_payload_1.getPayloadClient)({
+                        initOptions: {
+                            express: app,
+                            onInit: function (cms) { return __awaiter(void 0, void 0, void 0, function () {
+                                return __generator(this, function (_a) {
+                                    cms.logger.info("Admin URL: ".concat(cms.getAdminURL()));
+                                    return [2 /*return*/];
+                                });
+                            }); },
+                        },
+                    })];
+            case 1:
+                payload = _a.sent();
                 if (process.env.NEXT_BUILD) {
-                    app.listen(PORT, function () {
-                        payload.logger.info("Nextjs is building");
-                        //@ts-expect-error
-                        return (0, build_1.default)(path_1.default.join(__dirname, "../"));
-                        process.exit();
-                    });
+                    app.listen(PORT, function () { return __awaiter(void 0, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    payload.logger.info("Next.js is building for production");
+                                    // @ts-expect-error
+                                    return [4 /*yield*/, (0, build_1.default)(path_1.default.join(__dirname, "../"))];
+                                case 1:
+                                    // @ts-expect-error
+                                    _a.sent();
+                                    process.exit();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); });
                     return [2 /*return*/];
                 }
+                cartRouter = express_1.default.Router();
+                cartRouter.use(payload.authenticate);
+                cartRouter.get("/", function (req, res) {
+                    var request = req;
+                    if (!request.user)
+                        return res.redirect("/sign-in?origin=cart");
+                    var parsedUrl = (0, url_1.parse)(req.url, true);
+                    var query = parsedUrl.query;
+                    return next_utils_1.nextApp.render(req, res, "/cart", query);
+                });
+                app.use("/cart", cartRouter);
                 app.use("/api/trpc", trpcExpress.createExpressMiddleware({
                     router: trpc_1.appRouter,
                     createContext: createContext,
                 }));
                 app.use(function (req, res) { return (0, next_utils_1.nextHandler)(req, res); });
                 next_utils_1.nextApp.prepare().then(function () {
-                    payload.logger.info("Next js started");
-                    app.listen(PORT, function () {
-                        payload.logger.info("Nextjs app url ".concat(process.env.NEXT_PUBLIC_SERVER_URL));
-                    });
+                    payload.logger.info("Next.js started");
+                    app.listen(PORT, function () { return __awaiter(void 0, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            payload.logger.info("Next.js App URL: ".concat(process.env.NEXT_PUBLIC_SERVER_URL));
+                            return [2 /*return*/];
+                        });
+                    }); });
                 });
                 return [2 /*return*/];
         }
