@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -11,6 +12,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import React from "react";
 import { TaptapEditor } from "@/components/Editor";
+import { UploadDropzone } from "@/lib/uploadthing";
+import { Button } from "@/components/ui/button";
+
 const page = () => {
   return (
     <section className="max-w-7xl w-full mx-auto px-4 md:px-8">
@@ -41,7 +45,21 @@ const page = () => {
               <Label>Product description</Label>
               <TaptapEditor />
             </div>
+
+            <div className="flex flex-col gap-y-2">
+              <Label>Product image</Label>
+              <UploadDropzone endpoint="imageUploader" />
+            </div>
+
+            <div className="flex flex-col gap-y-2">
+              <Label>Product fiel</Label>
+              <UploadDropzone endpoint="productFileUploader" />
+            </div>
           </CardContent>
+
+          <CardFooter className="mt-5">
+            <Button>Submit product</Button>
+          </CardFooter>
         </form>
       </Card>
     </section>

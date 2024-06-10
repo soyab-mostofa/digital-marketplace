@@ -68,7 +68,7 @@ export function TaptapEditor() {
     content: `<p>Hello world!</p>`,
     editorProps: {
       attributes: {
-        class: "focus:outline-none min-h-[150px]",
+        class: "focus:outline-none min-h-[150px] prose prose-sm sm:prose-base",
       },
     },
   });
