@@ -11,6 +11,7 @@ import {
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import Link from "next/link";
 
 interface iUserNavProps {
   name: string;
@@ -38,7 +39,9 @@ const UserNav: FC<iUserNavProps> = ({ name, avatar, email }) => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Test</DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/sell">Sell your product</Link>
+          </DropdownMenuItem>
           <DropdownMenuItem>Test</DropdownMenuItem>
           <DropdownMenuItem>Test</DropdownMenuItem>
         </DropdownMenuGroup>
