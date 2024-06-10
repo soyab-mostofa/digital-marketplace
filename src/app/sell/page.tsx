@@ -52,7 +52,7 @@ const page = () => {
             </div>
 
             <div className="flex flex-col gap-y-2">
-              <Label>Product fiel</Label>
+              <Label>Product file</Label>
               <UploadDropzone endpoint="productFileUploader" />
             </div>
           </CardContent>
