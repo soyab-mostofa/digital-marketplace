@@ -1,6 +1,11 @@
 "use client";
 import React from "react";
-import { EditorContent, useEditor, type Editor } from "@tiptap/react";
+import {
+  EditorContent,
+  JSONContent,
+  useEditor,
+  type Editor,
+} from "@tiptap/react";
 import { Button } from "./ui/button";
 import StarterKit from "@tiptap/starter-kit";
 import { Menu } from "lucide-react";
@@ -62,14 +67,23 @@ const Menubar = ({ editor }: { editor: Editor | null }) => {
   );
 };
 
-export function TaptapEditor() {
+export function TaptapEditor({
+  json,
+  setJson,
+}: {
+  json: JSONContent | null;
+  setJson: any;
+}) {
   const editor = useEditor({
     extensions: [StarterKit],
-    content: `<p>Hello world!</p>`,
+    content: json ?? `<p>Hello world!</p>`,
     editorProps: {
       attributes: {
         class: "focus:outline-none min-h-[150px] prose prose-sm sm:prose-base",
       },
+    },
+    onUpdate: ({ editor }) => {
+      setJson(editor.getJSON());
     },
   });
 

@@ -1,3 +1,5 @@
+"use client";
+
 import { SelectCategory } from "@/components/SelectCategory";
 import {
   Card,
@@ -10,16 +12,37 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TaptapEditor } from "@/components/Editor";
 import { UploadDropzone } from "@/lib/uploadthing";
 import { Button } from "@/components/ui/button";
+import { JSONContent } from "@tiptap/react";
+import { useFormState } from "react-dom";
+import { State, createProduct } from "@/actions";
+import { toast } from "sonner";
+import SubmitButton from "@/components/SubmitButton";
+import { redirect } from "next/navigation";
 
 const page = () => {
+  const initialState: State = { message: "", status: undefined };
+  const [state, formAction] = useFormState(createProduct, initialState);
+  const [json, setJson] = useState<null | JSONContent>(null);
+  const [images, setImages] = useState<string[]>([]);
+  const [file, setFile] = useState<null | string>(null);
+
+  useEffect(() => {
+    if (state?.status === "success") {
+      toast.success(state?.message);
+      redirect("/");
+    }
+    if (state?.status === "error") {
+      toast.error(state?.message);
+    }
+  }, [state]);
   return (
     <section className="max-w-7xl w-full mx-auto px-4 md:px-8">
       <Card>
-        <form>
+        <form action={formAction}>
           <CardHeader>
             <CardTitle>Sell your product</CardTitle>
             <CardDescription>Please describe your product</CardDescription>
@@ -27,38 +50,103 @@ const page = () => {
           <CardContent className="flex flex-col gap-y-10">
             <div className="flex flex-col gap-y-2">
               <Label>Product name</Label>
-              <Input placeholder="Product name" type="text" />
+              <Input name="name" placeholder="Product name" type="text" />
+              {state?.errors?.["name"]?.[0] && (
+                <p className="text-destructive">
+                  {state?.errors?.["name"]?.[0]}
+                </p>
+              )}
             </div>
             <div className="flex flex-col gap-y-2">
               <Label>Select Category</Label>
               <SelectCategory />
+              {state?.errors?.["category"]?.[0] && (
+                <p className="text-destructive">
+                  {state?.errors?.["category"]?.[0]}
+                </p>
+              )}
             </div>
             <div className="flex flex-col gap-y-2">
               <Label>Product price</Label>
-              <Input placeholder="+1$" type="number" />
+              <Input name="price" placeholder="+1$" type="number" />
+              {state?.errors?.["price"]?.[0] && (
+                <p className="text-destructive">
+                  {state?.errors?.["price"]?.[0]}
+                </p>
+              )}
             </div>
             <div className="flex flex-col gap-y-2">
               <Label>Product summery</Label>
-              <Textarea placeholder="Please provide a description of your product" />
+              <Textarea
+                name="smallDesc"
+                placeholder="Please provide a description of your product"
+              />
+              {state?.errors?.["smallDesc"]?.[0] && (
+                <p className="text-destructive">
+                  {state?.errors?.["smallDesc"]?.[0]}
+                </p>
+              )}
             </div>
             <div className="flex flex-col gap-y-2">
+              <input type="hidden" name="desc" value={JSON.stringify(json)} />
               <Label>Product description</Label>
-              <TaptapEditor />
+              <TaptapEditor json={json} setJson={setJson} />
+              {state?.errors?.["desc"]?.[0] && (
+                <p className="text-destructive">
+                  {state?.errors?.["desc"]?.[0]}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-y-2">
+              <input
+                type="hidden"
+                name="images"
+                value={JSON.stringify(images)}
+              />
               <Label>Product image</Label>
-              <UploadDropzone endpoint="imageUploader" />
+              <UploadDropzone
+                endpoint="imageUploader"
+                onClientUploadComplete={(res) => {
+                  setImages(res.map((i) => i.url));
+                  toast.success("Image uploaded successfully");
+                }}
+                onUploadError={(err: Error) => {
+                  toast.error("Image upload failed");
+                  throw new Error(`${err}`);
+                }}
+              />
+              {state?.errors?.["images"]?.[0] && (
+                <p className="text-destructive">
+                  {state?.errors?.["images"]?.[0]}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-y-2">
+              <input type="hidden" name="productFile" value={file ?? ""} />
               <Label>Product file</Label>
-              <UploadDropzone endpoint="productFileUploader" />
+              <UploadDropzone
+                endpoint="productFileUploader"
+                onClientUploadComplete={(res) => {
+                  setFile(res[0].url);
+                  toast.success("File uploaded successfully");
+                }}
+                onUploadError={(err: Error) => {
+                  toast.error("File upload failed");
+                  throw new Error(`${err}`);
+                }}
+              />
+              {state?.errors?.["productFile"]?.[0] && (
+                <p className="text-destructive">
+                  {state?.errors?.["productFile"]?.[0]}
+                </p>
+              )}
             </div>
           </CardContent>
 
           <CardFooter className="mt-5">
-            <Button>Submit product</Button>
+            <SubmitButton />
           </CardFooter>
         </form>
       </Card>
