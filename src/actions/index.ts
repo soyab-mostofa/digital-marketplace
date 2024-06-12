@@ -2,7 +2,7 @@
 import prisma from "@/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { type ProductCategory } from "@prisma/client";
-import { z } from "zod";
+import * as z from "zod";
 
 const productSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
@@ -66,3 +66,61 @@ export const createProduct = async (prevState: any, formData: FormData) => {
 
   return state;
 };
+////////////////////////////////////////////////////////////////////////////////
+// Settings form actions
+////////////////////////////////////////////////////////////////////////////////
+
+const userSettingsSchema = z.object({
+  firstName: z
+    .string()
+    .min(1, { message: "First name is required" })
+    .or(z.literal(""))
+    .optional(),
+  lastName: z
+    .string()
+    .min(1, { message: "Last name is required" })
+    .or(z.literal(""))
+    .optional(),
+});
+
+export async function updateUserSettings(prevState: any, formData: FormData) {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  if (!user) {
+    throw new Error("something went wrong");
+  }
+
+  const validateFields = userSettingsSchema.safeParse({
+    firstName: formData.get("firstName"),
+    lastName: formData.get("lastName"),
+  });
+
+  console.log(validateFields);
+  if (!validateFields.success) {
+    const state: State = {
+      status: "error",
+      errors: validateFields.error.flatten().fieldErrors,
+      message: "Oops, I think there is a mistake with your inputs.",
+    };
+
+    return state;
+  }
+
+  const data = await prisma.user.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      firstName: validateFields.data.firstName,
+      lastName: validateFields.data.lastName,
+    },
+  });
+
+  const state: State = {
+    status: "success",
+    message: "Your Settings have been updated",
+  };
+
+  return state;
+}

@@ -42,7 +42,9 @@ const UserNav: FC<iUserNavProps> = ({ name, avatar, email }) => {
           <DropdownMenuItem asChild>
             <Link href="/sell">Sell your product</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem>Test</DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/settings">Settings</Link>
+          </DropdownMenuItem>
           <DropdownMenuItem>Test</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuItem>
