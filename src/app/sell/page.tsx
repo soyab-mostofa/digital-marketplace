@@ -146,7 +146,7 @@ const page = () => {
           </CardContent>
 
           <CardFooter className="mt-5">
-            <SubmitButton />
+            <SubmitButton title="Submit" />
           </CardFooter>
         </form>
       </Card>
