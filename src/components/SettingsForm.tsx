@@ -9,7 +9,6 @@ import {
 } from "./ui/card";
 import { Input } from "./ui/input";
 import SubmitButton from "./SubmitButton";
-import { useForm } from "react-hook-form";
 import { useFormState } from "react-dom";
 import { State, updateUserSettings } from "@/actions";
 import { toast } from "sonner";

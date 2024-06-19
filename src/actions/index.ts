@@ -124,3 +124,55 @@ export async function updateUserSettings(prevState: any, formData: FormData) {
 
   return state;
 }
+
+const editProductSchema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
+  price: z.number().min(8, { message: "Price should be greater than 8" }),
+  smallDesc: z.string().min(10, { message: "Small description is required" }),
+  id: z.string().min(1, { message: "Id is required" }),
+});
+
+export async function editProduct(prevState: any, formData: FormData) {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  if (!user) {
+    throw new Error("something went wrong");
+  }
+
+  const validateFields = editProductSchema.safeParse({
+    name: formData.get("name"),
+    price: Number(formData.get("price")),
+    smallDesc: formData.get("smallDesc"),
+    id: formData.get("id"),
+  });
+
+  console.log(formData);
+  if (!validateFields.success) {
+    const state: State = {
+      status: "error",
+      errors: validateFields.error.flatten().fieldErrors,
+      message: "Oops, I think there is a mistake with your inputs.",
+    };
+
+    return state;
+  }
+
+  const data = await prisma.product.update({
+    where: {
+      id: validateFields.data.id,
+    },
+    data: {
+      name: validateFields.data.name,
+      price: validateFields.data.price,
+      smallDesc: validateFields.data.smallDesc,
+    },
+  });
+
+  const state: State = {
+    status: "success",
+    message: "Your Settings have been updated",
+  };
+
+  return state;
+}

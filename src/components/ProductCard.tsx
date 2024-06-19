@@ -6,6 +6,8 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "./ui/carousel";
+import Link from "next/link";
+import { buttonVariants } from "./ui/button";
 
 interface ProductCardProps {
   images: string[];
@@ -13,6 +15,7 @@ interface ProductCardProps {
   price: number;
   category: string;
   smallDesc: string;
+  id: string;
 }
 
 const ProductCard = ({
@@ -21,9 +24,10 @@ const ProductCard = ({
   price,
   category,
   smallDesc,
+  id,
 }: ProductCardProps) => {
   return (
-    <div className="rounded-lg">
+    <div className="rounded-lg flex flex-col  space-y-4">
       <Carousel className="w-full mx-auto">
         <CarouselContent>
           {images.map((item, index) => (
@@ -43,17 +47,25 @@ const ProductCard = ({
         <CarouselNext className="mr-16" />
       </Carousel>
 
-      <div className="flex justify-between items-center mt-2">
-        <h2 className="text-xl font-semibold">{name}</h2>
-        <p
-          className="inline-flex text-base text-primary px-2 py-1 rounded-md font-medium items-center bg-primary/10 ring-1 
-        ring-inset ring-primary/20"
-        >
-          ${price}
-        </p>
+      <div className="flex flex-col grow">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold">{name}</h2>
+          <p
+            className="inline-flex text-base text-primary px-2 py-1 rounded-md font-medium items-center bg-primary/10 ring-1 
+          ring-inset ring-primary/20"
+          >
+            ${price}
+          </p>
+        </div>
+        <p className="mt-2 text-sm text-gray-500 line-clamp-2">{smallDesc}</p>
       </div>
 
-      <p className="mt-2 text-sm text-gray-500 line-clamp-2">{smallDesc}</p>
+      <Link
+        href={`/product/${id}`}
+        className={buttonVariants({ variant: "default" })}
+      >
+        See Details
+      </Link>
     </div>
   );
 };
