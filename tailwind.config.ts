@@ -1,6 +1,9 @@
 import type { Config } from "tailwindcss";
 import { withUt } from "uploadthing/tw";
 const config = {
+  corePlugins: {
+    aspectRatio: false,
+  },
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -74,7 +77,11 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("@tailwindcss/typography"),
+    require("@tailwindcss/aspect-ratio"),
+  ],
 } satisfies Config;
 
 export default withUt(config);

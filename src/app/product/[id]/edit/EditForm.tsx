@@ -41,6 +41,7 @@ export default function EditProductFrom({
       toast.success(state.message);
     } else if (state.status === "error") {
       toast.error(state.message);
+      console.log(state.errors);
     }
   }, [state]);
 
@@ -112,7 +113,7 @@ export default function EditProductFrom({
               Category
             </Label>
           </div>
-          <Select defaultValue="default">
+          <Select>
             <SelectTrigger className="rounded-md border border-input bg-background px-4 py-2 text-sm shadow-sm transition-colors focus:outline-none focus:ring-1 focus:ring-primary">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
