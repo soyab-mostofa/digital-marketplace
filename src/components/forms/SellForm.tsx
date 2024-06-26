@@ -20,7 +20,6 @@ import { State, createProduct } from "@/actions";
 import { toast } from "sonner";
 import SubmitButton from "@/components/SubmitButton";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
 
 const SellForm = () => {
   const initialState: State = { message: "", status: undefined };
@@ -32,7 +31,6 @@ const SellForm = () => {
   useEffect(() => {
     if (state?.status === "success") {
       toast.success(state?.message);
-      revalidatePath("/");
       redirect("/");
     }
     if (state?.status === "error") {
