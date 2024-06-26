@@ -6,13 +6,13 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./ui/card";
-import { Input } from "./ui/input";
-import SubmitButton from "./SubmitButton";
+} from "../ui/card";
+import { Input } from "../ui/input";
+import SubmitButton from "../SubmitButton";
 import { useFormState } from "react-dom";
-import { State, updateUserSettings } from "@/actions";
+import { type State, updateUserSettings } from "@/actions";
 import { toast } from "sonner";
-import { Label } from "./ui/label";
+import { Label } from "../ui/label";
 
 type SettingsFormProps = {
   firstName: string;

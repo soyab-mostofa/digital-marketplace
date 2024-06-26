@@ -56,6 +56,11 @@ export const createProduct = async (prevState: any, formData: FormData) => {
       images: validateSchema.data.images,
       productFile: validateSchema.data.productFile,
       category: validateSchema.data.category as ProductCategory,
+      User: {
+        connect: {
+          id: user.id,
+        },
+      },
     },
   });
 

@@ -8,10 +8,11 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import prisma from "@/lib/db";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { JSONContent } from "@tiptap/react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import Unauthorized from "@/components/Unauthorized";
 
 const getData = async (id: string) => {
   return await prisma.product.findUnique({
@@ -39,6 +40,13 @@ const getData = async (id: string) => {
 };
 
 const ProductPage = async ({ params }: { params: { id: string } }) => {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  if (!user) {
+    return <Unauthorized />;
+  }
+
   const { id } = params;
   const data = await getData(id);
 
@@ -66,7 +74,7 @@ const ProductPage = async ({ params }: { params: { id: string } }) => {
           <CarouselPrevious className="ml-16" />
           <CarouselNext className="mr-16" />
         </Carousel>
-        {
+        {user?.id === data?.User?.id && (
           <Link
             className={buttonVariants({
               variant: "secondary",
@@ -76,7 +84,7 @@ const ProductPage = async ({ params }: { params: { id: string } }) => {
           >
             Edit this product
           </Link>
-        }
+        )}
       </div>
 
       <div className="Max-w-2xl mx-auto mt-5 lg:max-w-none lg:mt-0 lg:row-end-2 lg:row-span-2 lg:col-span-3">
@@ -101,6 +109,12 @@ const ProductPage = async ({ params }: { params: { id: string } }) => {
               {new Intl.DateTimeFormat("en-US", {
                 dateStyle: "long",
               }).format(data?.createdAt)}
+            </h3>
+            <h3 className="text-sm font-medium text-muted-foreground col-span-1">
+              Creator
+            </h3>
+            <h3 className="text-sm font-medium col-span-1">
+              {data?.User?.firstName}
             </h3>
 
             <h3 className="text-sm font-medium text-muted-foreground col-span-1">
