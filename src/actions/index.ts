@@ -96,7 +96,6 @@ export async function updateUserSettings(prevState: any, formData: FormData) {
     lastName: formData.get("lastName"),
   });
 
-  console.log(validateFields);
   if (!validateFields.success) {
     const state: State = {
       status: "error",
@@ -147,7 +146,6 @@ export async function editProduct(prevState: any, formData: FormData) {
     id: formData.get("id"),
   });
 
-  console.log(formData);
   if (!validateFields.success) {
     const state: State = {
       status: "error",

@@ -29,7 +29,6 @@ const SettingsForm = ({ firstName, lastName, email }: SettingsFormProps) => {
   const [state, formAction] = useFormState(updateUserSettings, initialState);
 
   useEffect(() => {
-    console.log(state);
     if (state.status === "success") {
       toast.success(state.message);
     } else if (state.status === "error") {

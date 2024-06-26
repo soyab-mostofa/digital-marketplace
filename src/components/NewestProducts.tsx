@@ -9,7 +9,6 @@ const NewestProducts = async () => {
     orderBy: { createdAt: "desc" },
   });
 
-  console.log(products);
   return (
     <section className="max-w-7xl mx-auto px-4 md:px-8 mb-10 flex flex-col gap-5 mt-10">
       <div className="flex items-center">

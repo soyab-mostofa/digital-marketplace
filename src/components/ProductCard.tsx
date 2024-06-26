@@ -8,12 +8,13 @@ import {
 } from "./ui/carousel";
 import Link from "next/link";
 import { buttonVariants } from "./ui/button";
+import { Skeleton } from "./ui/skeleton";
 
 interface ProductCardProps {
   images: string[];
   name: string;
   price: number;
-  category: string;
+
   smallDesc: string;
   id: string;
 }
@@ -22,7 +23,7 @@ const ProductCard = ({
   images,
   name,
   price,
-  category,
+
   smallDesc,
   id,
 }: ProductCardProps) => {
@@ -66,6 +67,20 @@ const ProductCard = ({
       >
         See Details
       </Link>
+    </div>
+  );
+};
+
+export const LoadingProductCard = () => {
+  return (
+    <div className="flex flex-col">
+      <Skeleton className="h-[240px] w-full" />
+      <div className="flex flex-col gap-y-2 mt-2">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-6 w-full" />
+      </div>
+
+      <Skeleton className="h-10 mt-6 w-full" />
     </div>
   );
 };
