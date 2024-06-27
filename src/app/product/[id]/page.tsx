@@ -50,7 +50,7 @@ const ProductPage = async ({ params }: { params: { id: string } }) => {
   return (
     <section className="max-w-7xl mx-auto px-4 Ig:px-8 lg:grid pt-6 Ig:grid-rows-1 lg:grid-cols-7 lg:gap-x-8 lg:gap-y-10 xl:gap-x-16">
       <div className="lg:row-end-1 lg:col-span-4">
-        <ProductImageSlider data={data} />
+        <ProductImageSlider data={data.images} />
         {user?.id === data?.User?.id && (
           <Link
             className={buttonVariants({

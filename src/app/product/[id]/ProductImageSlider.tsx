@@ -7,12 +7,16 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Image from "next/image";
-import { type Product } from "@prisma/client";
-const ProductImageSlider = (data: Product) => {
+
+interface pageProps {
+  data: string[];
+}
+
+const ProductImageSlider = ({ data }: pageProps) => {
   return (
     <Carousel>
       <CarouselContent>
-        {data?.images.map((item, index: number) => (
+        {data.map((item, index: number) => (
           <CarouselItem key={index}>
             <div className="aspect-w-4 aspect-h-3 rounded-lg bg-gray-100 overflow-hidden">
               <Image
