@@ -6,11 +6,10 @@ export default function LoadingFile() {
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-10">
         <div className="col-span-1">
           <Skeleton className="h-[300px] lg:h-[400px] w-full" />
-          <Skeleton className="h-[400px] w-full" />
-
-          <div className="col-span-1 mt-10">
-            <Skeleton className="h-[300px] lg:h-[400px] w-full" />
-          </div>
+          <Skeleton className="h-[400px] w-full mt-10" />
+        </div>
+        <div className="col-span-1 mt-10">
+          <Skeleton className="h-[300px] lg:h-[400px] w-full" />
         </div>
       </div>
     </section>

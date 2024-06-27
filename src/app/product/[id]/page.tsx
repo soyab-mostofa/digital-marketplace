@@ -1,18 +1,12 @@
 import ProductDescription from "@/components/ProductDescription";
 import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import prisma from "@/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { JSONContent } from "@tiptap/react";
 import Image from "next/image";
 import Link from "next/link";
 import Unauthorized from "@/components/Unauthorized";
+import ProductImageSlider from "./ProductImageSlider";
 
 const getData = async (id: string) => {
   return await prisma.product.findUnique({
@@ -56,24 +50,7 @@ const ProductPage = async ({ params }: { params: { id: string } }) => {
   return (
     <section className="max-w-7xl mx-auto px-4 Ig:px-8 lg:grid pt-6 Ig:grid-rows-1 lg:grid-cols-7 lg:gap-x-8 lg:gap-y-10 xl:gap-x-16">
       <div className="lg:row-end-1 lg:col-span-4">
-        <Carousel>
-          <CarouselContent>
-            {data?.images.map((item, index) => (
-              <CarouselItem key={index}>
-                <div className="aspect-w-4 aspect-h-3 rounded-lg bg-gray-100 overflow-hidden">
-                  <Image
-                    src={item as string}
-                    alt="yoo"
-                    fill
-                    className="object-cover w-full h-full rounded-lg"
-                  />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="ml-16" />
-          <CarouselNext className="mr-16" />
-        </Carousel>
+        <ProductImageSlider data={data} />
         {user?.id === data?.User?.id && (
           <Link
             className={buttonVariants({
