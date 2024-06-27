@@ -34,7 +34,7 @@ const Navbar = async () => {
               <RegisterLink>Get Started</RegisterLink>
             </Button>
             <Button variant="outline" asChild>
-              <LoginLink>Sign in</LoginLink>
+              <LoginLink postLoginRedirectURL="/my-products">Sign in</LoginLink>
             </Button>
           </div>
         )}
